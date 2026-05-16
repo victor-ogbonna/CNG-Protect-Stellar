@@ -1,26 +1,50 @@
 # CNG-Protect 🛡️
-### Hardware-Verified QA Escrow System for CNG Vehicle Retrofits
+**Hardware-Verified QA Escrow System for High-Stakes CNG Vehicle Retrofits**
 
-CNG-Protect bridges physical IoT safety sensors with Web3 Trustless Escrow payments to solve the trust crisis between vehicle owners and engineers during high-stakes fuel system conversions.
+![Tech Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20Node.js%20%7C%20Firebase%20%7C%20Stellar-blue)
+![Integration](https://img.shields.io/badge/Integration-Trustless_Work_Escrow-success)
+![Hardware](https://img.shields.io/badge/IoT-ESP32%20%2B%20MQ2_Gas_Sensor-orange)
 
-## 🚀 The Trust Problem
-Commercial fleet owners want to convert vehicles to CNG to save costs, but fear hazardous gas leaks and hesitate to pay upfront. Engineers fear performing complex retrofits without guaranteed payment. 
+CNG-Protect bridges physical IoT safety sensors with Web3 payments to solve the trust crisis in the B2B logistics sector. We remove human subjectivity from quality assurance by letting hardware metrics dictate the release of milestone-based stablecoin payments.
 
-**Solution:** We remove human subjectivity by letting IoT hardware dictate the payment.
+---
+
+## 🚨 The Trust Problem
+Commercial logistics companies want to convert their fleets to Compressed Natural Gas (CNG) to save costs. However:
+1. **The Client (Fleet Owner)** fears poor execution resulting in hazardous gas leaks that destroy assets and lives. They hesitate to pay upfront.
+2. **The Service Provider (Engineer)** fears performing complex, expensive retrofit work without a guaranteed payout.
+
+## 💡 The Solution: Hardware as the Referee
+CNG-Protect acts as an autonomous, trustless arbitrator. Funds are locked in a **Trustless Work** smart escrow. An ESP32 sensor monitors the vehicle's structural safety in real-time. 
+
+* **The Unlock Condition:** If 48 hours pass with zero gas leaks, the Oracle automatically releases the USDC to the engineer.
+* **Dispute Resolution:** If the hardware logs a leak ($\ge$ 1100 ppm), the Oracle instantly freezes the contract and triggers an automated refund to the client.
+
+---
 
 ## ⚙️ Technical Architecture
-1. **IoT Sniffing Array (ESP32):** Real-time monitoring of gas (MQ2) and engine temperature. Streams live data to Firebase.
-2. **Reactive Backend Oracle (Node.js):** Evaluates safety variables in real-time. If zero leaks occur during the probation period, it releases funds. If a leak is detected, it freezes the smart contract.
-3. **Trustless Escrow:** Smart contracts built on Stellar that lock USDC capital.
-4. **Fleet Dashboard (Next.js):** Real-time telemetry command center for fleet managers.
+The system is divided into three interconnected layers:
 
-## 📊 The Smart Escrow Logic Flow
-1. **Deposit:** Client locks 50 USDC in a Trustless Work Escrow.
-2. **Monitor:** ESP32 streams data during the probationary period.
-3. **Resolve:** 
-   * **Success Path (<1100ppm):** Oracle releases funds directly to the Engineer.
-   * **Failure Path (>=1100ppm):** Oracle triggers an automated refund to the Client.
+1. **Layer 1: IoT Hardware (ESP32)**
+   * Sniffs the air using an MQ2 Gas Sensor and monitors engine temperature.
+   * Streams telemetry data in real-time to a Firebase Realtime Database.
+2. **Layer 2: The Web3 Oracle (Node.js)**
+   * Continuously evaluates the safety rules. 
+   * Cryptographically signs and triggers the Trustless Work Smart Contract API to route funds based on physical data.
+3. **Layer 3: Fleet Dashboard (Next.js)**
+   * A visual command center for fleet managers to watch live telemetry and monitor the live on-chain status of their escrowed funds.
 
-## 📁 Key Files in this Repository
-* `/index.js` - The Backend Oracle script.
-* `/cng-dashboard1/src/app/page.tsx` - The Fleet Telemetry Dashboard UI.
+---
+
+## 📂 Repository Structure
+```text
+/
+├── index.js                  # The Node.js Oracle (Referee/Arbitrator Logic)
+├── package.json              # Backend dependencies (Firebase-admin, dotenv)
+├── README.md                 # Project Documentation
+└── /cng-dashboard1           # Next.js Frontend App
+    ├── src/app/page.tsx      # Main Fleet Telemetry UI
+    └── package.json          # Frontend dependencies (React, Firebase client)
+
+
+    
