@@ -1,19 +1,14 @@
 {
-  "name": "cng-oracle",
+  "name": "cng-protect",
   "version": "1.0.0",
-  "description": "",
+  "description": "Hardware-Verified QA Escrow System for CNG Vehicle Retrofits",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@stellar/stellar-sdk": "^15.1.0",
-    "axios": "^1.16.1",
-    "dotenv": "^17.4.2",
-    "firebase-admin": "^13.10.0",
-    "stellar-hd-wallet": "^1.0.2"
+    "@stellar/stellar-sdk": "^12.1.0",
+    "dotenv": "^16.4.5",
+    "firebase-admin": "^12.1.0"
   }
 }
