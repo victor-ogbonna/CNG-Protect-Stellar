@@ -1,0 +1,19 @@
+{
+  "name": "cng-oracle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@stellar/stellar-sdk": "^15.1.0",
+    "axios": "^1.16.1",
+    "dotenv": "^17.4.2",
+    "firebase-admin": "^13.10.0",
+    "stellar-hd-wallet": "^1.0.2"
+  }
+}
