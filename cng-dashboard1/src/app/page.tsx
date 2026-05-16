@@ -4,8 +4,8 @@ import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onValue } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB6nZ7dKGYYe89FiXB2eRTyFSxskCINIg4",
-  databaseURL: "https://cng-protect-default-rtdb.firebaseio.com",
+  apiKey: "AI*****4",
+  databaseURL: "https://cng****-default-rtdb.firebaseio.com",
 };
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
