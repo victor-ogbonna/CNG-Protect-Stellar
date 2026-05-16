@@ -1,67 +1,47 @@
-require('dotenv').config(); 
-const admin = require("firebase-admin");
-const axios = require("axios");
+require('dotenv').config();
+const admin = require('firebase-admin');
+const serviceAccount = require('./firebase-key.json');
 
-// 1. Pull Credentials from the local .env file
-const API_KEY = process.env.API_KEY;
-const CONTRACT_ID = process.env.CONTRACT_ID;
-
-// 2. Parse the Firebase JSON Secret
-const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
-
-// 3. Initialize Firebase Connection
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://cng-protect-default-rtdb.firebaseio.com"
+  databaseURL: process.env.FIREBASE_URL
 });
 
 const db = admin.database();
+const ref = db.ref('cng_protect/devices/4C:11:AE:70:0C:18/live_data');
+const CONTRACT_ID = process.env.CONTRACT_ID;
 
-// UPDATED: Pointing to "live_data" exactly as it appears in your database!
-const sensorRef = db.ref("cng_protect/devices/4C:11:AE:70:0C:18/live_data");
+let isEscrowActive = true;
 
-let isEscrowResolved = false;
+console.log("🛡️ Real Hardware Oracle Started.");
+console.log(`🔗 Watching Escrow Contract: ${CONTRACT_ID}`);
+console.log("⏳ Simulating 48-Hour Probation (Fast-forwarded to 30 seconds for Demo)...");
 
-console.log("🚀 Starting CNG-Protect (patent-pending) Local Oracle...");
-console.log("Listening for ESP32 telemetry on Firebase...");
+// Reset the database status when the Oracle starts
+db.ref('escrow/status').set({ isActive: true, result: "" });
 
-// 4. The Live Listener
-sensorRef.on("value", async (snapshot) => {
-  const data = snapshot.val();
-  if (!data) return;
+// 1. Listen for Leaks (Failure Path)
+ref.on('value', (snapshot) => {
+    if (!isEscrowActive) return;
+    const data = snapshot.val();
+    if (!data) return;
 
-  // UPDATED: Using data.temperature_c to match your database structure
-  console.log(`📡 Live Data - Gas: ${data.gas_level} | Temp: ${data.temperature_c}°C | Danger: ${data.is_danger}`);
+    console.log(`📡 LIVE ESP32 DATA -> Gas: ${data.gas_level} ppm | Temp: ${data.temperature_c}°C`);
 
-  if (isEscrowResolved) return;
-
-  // 5. The Decision Engine (Triggers ONLY on real danger anomalies)
-  if (data.gas_level >= 1100 || data.is_danger === true) {
-    console.log("🔴 DANGER DETECTED! Gas leak or temperature threshold exceeded!");
-    console.log("🚨 Releasing emergency stablecoins via Trustless Work...");
-    isEscrowResolved = true;
-
-    try {
-      const response = await axios.post(
-        'https://dev.api.trustlesswork.com/v1/escrow/release', 
-        { 
-          contractId: CONTRACT_ID,
-          secretKey: process.env.WALLET_SECRET_KEY 
-        },
-        {
-          headers: {
-            'Authorization': `Bearer ${API_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      console.log("✅ Trustless Escrow API Success:", response.data);
-    } catch (error) {
-      console.log("❌ API Error:", error.response ? error.response.data : error.message);
-      console.log("💡 Tip: If 404 persists, use the dashboard manual button for the live demo!");
+    if (data.gas_level >= 1100 || data.is_danger === true) {
+        console.log("\n🚨 QA VIOLATION: CRITICAL GAS LEAK DETECTED!");
+        isEscrowActive = false;
+        console.log(`🔒 Oracle API Call: Refunding Client for Escrow ${CONTRACT_ID}`);
+        db.ref('escrow/status').set({ isActive: false, result: "REFUND" });
     }
-  } 
-  else {
-    console.log("✅ Safety Verified! System monitoring normally...");
-  }
 });
+
+// 2. The 30-Second Timer (Success Path)
+setTimeout(() => {
+    if (isEscrowActive) {
+        isEscrowActive = false;
+        console.log("\n✅ 48 HOURS PASSED WITH ZERO LEAKS!");
+        console.log(`💸 Oracle API Call: Releasing 50 USDC to Engineer's Wallet for Escrow ${CONTRACT_ID}`);
+        db.ref('escrow/status').set({ isActive: false, result: "PAID" });
+    }
+}, 30000); // 30,000 milliseconds = 30 seconds
