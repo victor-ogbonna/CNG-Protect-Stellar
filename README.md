@@ -1,67 +1,26 @@
 # CNG-Protect 🛡️
-### IoT Safety Telemetry & Automated Web3 Smart Contract Escrow Release System
+### Hardware-Verified QA Escrow System for CNG Vehicle Retrofits
 
-CNG-Protect is an advanced, industrial-grade mechatronic safety platform designed by **Ogbontor Engineering Enterprise** to monitor and mitigate catastrophic fuel line failures in Compressed Natural Gas (CNG) retrofitted vehicles across Africa. 
+CNG-Protect bridges physical IoT safety sensors with Web3 Trustless Escrow payments to solve the trust crisis between vehicle owners and engineers during high-stakes fuel system conversions.
 
-By marrying high-fidelity hardware sensor arrays with automated Web3 smart contracts via the Stellar blockchain framework, CNG-Protect dramatically accelerates emergency response, turning traditional multi-week insurance claim bureaucracies into a **5-second automated financial resolution pipeline**.
+## 🚀 The Trust Problem
+Commercial fleet owners want to convert vehicles to CNG to save costs, but fear hazardous gas leaks and hesitate to pay upfront. Engineers fear performing complex retrofits without guaranteed payment. 
 
----
+**Solution:** We remove human subjectivity by letting IoT hardware dictate the payment.
 
-## 🚀 Key Core Innovations
-* **Real-Time IoT Sniffing Array:** Monitored via an ESP32 micro-controller processing active gas concentrations (via MQ2) and structural temperatures.
-* **Reactive Local Oracle Engine:** A continuous Node.js engine acting as a decentralized bridge, evaluating Firebase database variables every 2000ms.
-* **Trustless Escrow Payouts:** Smart contracts deployed on-chain that securely lock emergency repair capital (USDC) and instantly release payouts autonomously the moment a critical hazard occurs.
-* **Responsive Command Dashboard:** A clean Next.js/Turbopack control dashboard engineered for fleet managers to visually track live vehicle parameter baselines.
+## ⚙️ Technical Architecture
+1. **IoT Sniffing Array (ESP32):** Real-time monitoring of gas (MQ2) and engine temperature. Streams live data to Firebase.
+2. **Reactive Backend Oracle (Node.js):** Evaluates safety variables in real-time. If zero leaks occur during the probation period, it releases funds. If a leak is detected, it freezes the smart contract.
+3. **Trustless Escrow:** Smart contracts built on Stellar that lock USDC capital.
+4. **Fleet Dashboard (Next.js):** Real-time telemetry command center for fleet managers.
 
----
+## 📊 The Smart Escrow Logic Flow
+1. **Deposit:** Client locks 50 USDC in a Trustless Work Escrow.
+2. **Monitor:** ESP32 streams data during the probationary period.
+3. **Resolve:** 
+   * **Success Path (<1100ppm):** Oracle releases funds directly to the Engineer.
+   * **Failure Path (>=1100ppm):** Oracle triggers an automated refund to the Client.
 
-## 📊 System Architecture Flow
-
-1. **Hardware Collection:** ESP32 captures telemetry ➡️ updates remote Firebase Realtime Database.
-2. **Oracle Observation:** Node.js server reads the data stream ➡️ checks against strict parameters.
-3. **Threshold Breached:** If gas metrics cross `1100 ppm`, safety protocols trigger.
-4. **On-Chain Settlement:** Oracle securely coordinates with Trustless Work smart contracts via REST APIs to release locked USDC directly to the operator's digital wallet.
-
----
-
-## 🛠️ Repository File Structure
-
-This repository contains both crucial segments of the local system operational stack:
-
-* `/index.js` — The Core Node.js Local Oracle script executing active Firebase event listeners and managing Web3 transaction dispatches.
-* `/cng-frontend/` — The Next.js dashboard app presenting real-time sensor streams and interactive visual escrow controls for demo deployment.
-
----
-
-## 💻 Local Installation & Setup
-
-### 1. Prerequisites
-Ensure you have [Node.js](https://nodejs.org/) installed on your machine.
-
-### 2. Backend Oracle Configuration
-Clone the repository and install dependencies inside the root directory:
-```bash
-npm install dotenv firebase-admin axios
-```
-
-Create a secure `.env` file in the root folder:
-```env
-API_KEY="your_trustless_work_api_key"
-CONTRACT_ID="your_deployed_escrow_contract_id"
-WALLET_SECRET_KEY="your_stellar_private_key"
-FIREBASE_CREDENTIALS='{"your": "firebase_json_service_account_credentials"}'
-```
-
-Run the local oracle connection:
-```bash
-node index.js
-```
-
-### 3. Frontend Dashboard Configuration
-Navigate to the frontend workspace folder:
-```bash
-cd cng-frontend
-npm install
-npm run dev
-```
-Open [http://localhost:3000](http://localhost:3000) in your web browser to observe live synchronization.
+## 📁 Key Files in this Repository
+* `/index.js` - The Backend Oracle script.
+* `/cng-dashboard1/src/app/page.tsx` - The Fleet Telemetry Dashboard UI.
