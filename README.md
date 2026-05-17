@@ -1,6 +1,8 @@
 # CNG-Protect 🛡️
 **Hardware-Verified QA Escrow System for High-Stakes CNG Vehicle Retrofits**
 
+### 🎥 👉 [Click Here to Watch the Full Demo Video](https://drive.google.com/drive/folders/1kf4UbxT29cLcafKJFxeKxgcjXUHqatRg) 👈 🎥
+
 ![Tech Stack](https://img.shields.io/badge/Stack-Next.js%20%7C%20Node.js%20%7C%20Firebase%20%7C%20Stellar-blue)
 ![Integration](https://img.shields.io/badge/Integration-Trustless_Work_Escrow-success)
 ![Hardware](https://img.shields.io/badge/IoT-ESP32%20%2B%20MQ2_Gas_Sensor-orange)
@@ -36,6 +38,41 @@ The system is divided into three interconnected layers:
 
 ---
 
+
+## 🚀 How to Run Locally
+
+### 1. Prerequisites
+* Node.js installed (`v18+`)
+* A Firebase Project with Realtime Database enabled
+* Trustless Work BackOffice Escrow ID
+
+### 2. Environment Variables (`.env`)
+Create a `.env` file in the root directory:
+
+```env
+CONTRACT_ID=your_trustless_escrow_id
+ORACLE_SECRET_KEY=your_stellar_wallet_secret
+TRUSTLESS_API_KEY=your_trustless_api_key
+FIREBASE_URL=https://your-project.firebaseio.com
+```
+
+Note: Ensure firebase-key.json (Firebase Service Account Key) is placed in the root folder so the backend Oracle can authenticate.
+3. Start the Backend Oracle
+# In the root directory
+```
+npm install
+node index.js
+```
+
+4. Start the Fleet Dashboard
+# In a new terminal window
+```
+cd cng-dashboard1
+npm install
+npm run dev
+Open http://localhost:3000 in your browser to view the live hardware dashboard.
+```
+
 ## 📂 Repository Structure
 ```text
 /
@@ -46,5 +83,6 @@ The system is divided into three interconnected layers:
     ├── src/app/page.tsx      # Main Fleet Telemetry UI
     └── package.json          # Frontend dependencies (React, Firebase client)
 
+---
 
     
